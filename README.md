@@ -1,5 +1,7 @@
 # jupysql_autocomplete
 
+![Custom completion](completer.mov)
+
 [![Github Actions Status](https://github.com/neelasha23/jupysql-autocomplete.git/workflows/Build/badge.svg)](https://github.com/neelasha23/jupysql-autocomplete.git/actions/workflows/build.yml)[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/neelasha23/jupysql-autocomplete.git/main?urlpath=lab)
 A JupyterLab extension.
 

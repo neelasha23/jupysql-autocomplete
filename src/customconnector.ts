@@ -85,6 +85,9 @@ namespace Private {
       { value: 'CREATE', offset: 0, type: 'sql'},
       { value: 'CREATE TABLE', offset: 0, type: 'sql'},
       { value: 'CREATE DATABASE', offset: 0, type: 'sql'},
+      { value: 'INSERT', offset: 0, type: 'sql'},
+      { value: 'INSERT INTO', offset: 0, type: 'sql'},
+      { value: 'VALUES', offset: 0, type: 'sql'},
     ];
 
     // Only choose the ones that have a non-empty type field, which are likely to be of interest.
