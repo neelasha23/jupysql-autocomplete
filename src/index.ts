@@ -47,7 +47,8 @@ const extension: JupyterFrontEndPlugin<void> = {
       (sender: INotebookTracker, panel: NotebookPanel) => {
         let editor = panel.content.activeCell?.editor ?? null;
         const session = panel.sessionContext.session;
-        const options = { session, editor };
+        const sessionContext = panel.sessionContext;
+        const options = { session, editor, sessionContext };
         const connector = new CompletionConnector([]);
         const handler = completionManager.register({
           connector,
@@ -58,6 +59,7 @@ const extension: JupyterFrontEndPlugin<void> = {
         const updateConnector = () => {
           editor = panel.content.activeCell?.editor ?? null;
           options.session = panel.sessionContext.session;
+          options.sessionContext = panel.sessionContext;
           options.editor = editor;
           handler.editor = editor;
 

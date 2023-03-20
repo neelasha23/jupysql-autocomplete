@@ -7,6 +7,12 @@ import { CodeEditor } from '@jupyterlab/codeeditor';
 import { DataConnector } from '@jupyterlab/statedb';
 import { CompletionHandler } from '@jupyterlab/completer';
 
+import { KernelModel } from './model';
+
+import {
+  ISessionContext
+} from '@jupyterlab/apputils';
+
 /**
  * A custom connector for completion handlers.
  */
@@ -23,6 +29,7 @@ export class CustomConnector extends DataConnector<
   constructor(options: CustomConnector.IOptions) {
     super();
     this._editor = options.editor;
+    this._sessionContext = options.sessionContext;
   }
 
   /**
@@ -38,11 +45,13 @@ export class CustomConnector extends DataConnector<
       return Promise.reject('No editor');
     }
     return new Promise<CompletionHandler.IReply>((resolve) => {
-      resolve(Private.completionHint(this._editor));
+      resolve(Private.completionHint(this._editor, this._sessionContext));
     });
   }
 
   private _editor: CodeEditor.IEditor | null;
+  private _sessionContext: ISessionContext | null;
+
 }
 
 /**
@@ -57,7 +66,9 @@ export namespace CustomConnector {
      * The session used by the custom connector.
      */
     editor: CodeEditor.IEditor | null;
+    sessionContext: ISessionContext | null;
   }
+
 }
 
 /**
@@ -71,11 +82,42 @@ namespace Private {
    * @returns Completion reply
    */
   export function completionHint(
-    editor: CodeEditor.IEditor
+    editor: CodeEditor.IEditor,
+    sessionContext: ISessionContext,
   ): CompletionHandler.IReply {
     // Find the token at the cursor
     const cursor = editor.getCursorPosition();
     const token = editor.getTokenForPosition(cursor);
+
+    const model = new KernelModel(sessionContext);
+
+   
+    /**const code = 
+    `
+    %%sql sqlite://
+    CREATE TABLE languages(name, rating, change);
+    INSERT INTO languages VALUES('Python', 1, 2);
+    SELECT * FROM languages;
+    `
+    
+
+    const code = 
+    `
+    a = 'hello'
+    isinstance(a, str)
+    `
+    */
+
+    const code = 
+    `
+    import sqlite3
+    con = sqlite3.connect('/Users/neelashasen/Dev/jupysql_autocomplete/mydbtest')
+    cursor = con.cursor()
+    cursor.execute("SELECT name FROM sqlite_master where type='table'")
+    cursor.fetchall()
+    `
+
+    console.log(model.execute(code))
 
     // Create a list of matching tokens.
     const tokenList = [
